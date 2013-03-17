@@ -79,7 +79,7 @@ static char primary_iface[PROPERTY_VALUE_MAX];
 // sockets is in
 
 #ifdef USES_TI_MAC80211
-#define P2P_INTERFACE            "p2p0"
+#define P2P_INTERFACE			"p2p0"
 struct nl_sock *nl_soc;
 struct nl_cache *nl_cache;
 struct genl_family *nl80211;
@@ -92,30 +92,18 @@ struct genl_family *nl80211;
 #define WIFI_DRIVER_MODULE_AP_ARG       ""
 #endif
 #ifndef WIFI_FIRMWARE_LOADER
-#define WIFI_FIRMWARE_LOADER        ""
+#define WIFI_FIRMWARE_LOADER		""
 #endif
-#define WIFI_TEST_INTERFACE        "sta"
+#define WIFI_TEST_INTERFACE		"sta"
 
 #ifndef WIFI_DRIVER_FW_PATH_STA
-#define WIFI_DRIVER_FW_PATH_STA        NULL
+#define WIFI_DRIVER_FW_PATH_STA		NULL
 #endif
 #ifndef WIFI_DRIVER_FW_PATH_AP
-#define WIFI_DRIVER_FW_PATH_AP        NULL
+#define WIFI_DRIVER_FW_PATH_AP		NULL
 #endif
 #ifndef WIFI_DRIVER_FW_PATH_P2P
-#define WIFI_DRIVER_FW_PATH_P2P        NULL
-#endif
-
-#ifdef WIFI_EXT_MODULE_NAME
-static const char EXT_MODULE_NAME[] = WIFI_EXT_MODULE_NAME;
-#ifdef WIFI_EXT_MODULE_ARG
-static const char EXT_MODULE_ARG[] = WIFI_EXT_MODULE_ARG;
-#else
-static const char EXT_MODULE_ARG[] = "";
-#endif
-#endif
-#ifdef WIFI_EXT_MODULE_PATH
-static const char EXT_MODULE_PATH[] = WIFI_EXT_MODULE_PATH;
+#define WIFI_DRIVER_FW_PATH_P2P		NULL
 #endif
 
 #ifdef WIFI_EXT_MODULE_NAME
@@ -131,10 +119,8 @@ static const char EXT_MODULE_PATH[] = WIFI_EXT_MODULE_PATH;
 #endif
 
 #ifndef WIFI_DRIVER_FW_PATH_PARAM
-#define WIFI_DRIVER_FW_PATH_PARAM    "/sys/module/wlan/parameters/fwpath"
+#define WIFI_DRIVER_FW_PATH_PARAM	"/sys/module/wlan/parameters/fwpath"
 #endif
-
-#define WIFI_DRIVER_LOADER_DELAY    1000000
 
 static const char IFACE_DIR[]           = "/data/system/wpa_supplicant";
 #ifdef WIFI_DRIVER_MODULE_PATH
@@ -331,7 +317,9 @@ int wifi_load_driver()
     }
 
     if (strcmp(FIRMWARE_LOADER,"") == 0) {
-        /* usleep(WIFI_DRIVER_LOADER_DELAY); */
+#ifdef WIFI_DRIVER_LOADER_DELAY
+        usleep(WIFI_DRIVER_LOADER_DELAY);
+#endif
         property_set(DRIVER_PROP_NAME, "ok");
     }
     else {
