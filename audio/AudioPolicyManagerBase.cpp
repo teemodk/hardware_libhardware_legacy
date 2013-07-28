@@ -3149,12 +3149,20 @@ audio_devices_t AudioPolicyManagerBase::AudioOutputDescriptor::supportedDevices(
 
 bool AudioPolicyManagerBase::AudioOutputDescriptor::isActive(uint32_t inPastMs) const
 {
-    return isStrategyActive(NUM_STRATEGIES, inPastMs);
+    nsecs_t sysTime = systemTime();
+    for (int i = 0; i < AudioSystem::NUM_STREAM_TYPES; i++) {
+        if (mRefCount[i] != 0 ||
+            ns2ms(sysTime - mStopTime[i]) < inPastMs) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool AudioPolicyManagerBase::AudioOutputDescriptor::isStrategyActive(routing_strategy strategy,
                                                                        uint32_t inPastMs,
                                                                        nsecs_t sysTime) const
+
 {
     if ((sysTime == 0) && (inPastMs != 0)) {
         sysTime = systemTime();
@@ -3184,18 +3192,6 @@ bool AudioPolicyManagerBase::AudioOutputDescriptor::isStreamActive(AudioSystem::
     }
     if (ns2ms(sysTime - mStopTime[stream]) < inPastMs) {
         return true;
-    }
-    return false;
-}
-
-bool AudioPolicyManagerBase::AudioOutputDescriptor::isActive(uint32_t inPastMs) const
-{
-    nsecs_t sysTime = systemTime();
-    for (int i = 0; i < AudioSystem::NUM_STREAM_TYPES; i++) {
-        if (mRefCount[i] != 0 ||
-            ns2ms(sysTime - mStopTime[i]) < inPastMs) {
-            return true;
-        }
     }
     return false;
 }
