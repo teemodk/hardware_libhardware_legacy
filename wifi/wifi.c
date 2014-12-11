@@ -864,7 +864,7 @@ int wifi_supplicant_connection_active()
 int wifi_ctrl_recv(char *reply, size_t *reply_len)
 {
     int res;
-    int ctrlfd = wpa_ctrl_get_fd(monitor_conn);
+    int ctrlfd;
     struct pollfd rfds[2];
 
     if (monitor_conn == NULL) {
